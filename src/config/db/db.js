@@ -2,10 +2,10 @@ import { Pool } from 'pg'
 
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'ecommerce',
-  password: 'teccurious06',
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_DATABASE,
   port: 5432,
 //   max: 20,          
 //   idleTimeoutMillis: 30000, // close idle clients after 30s
@@ -13,4 +13,4 @@ const pool = new Pool({
 });
 
 
-export default pool
+export default pool 
