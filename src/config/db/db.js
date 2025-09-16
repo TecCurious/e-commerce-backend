@@ -5,7 +5,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'ecommerce',
-  password: 'teccurious06',
+  password: 'yanshika',
   port: 5432,
 //   max: 20,          
 //   idleTimeoutMillis: 30000, // close idle clients after 30s
