@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended:true}));
 
 const PORT = process.env.PORT;
 
+console.log(process.env.DB_PASSWORD);
 
 pool.connect((err, client, release) => {
   if (err) {
