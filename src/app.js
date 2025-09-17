@@ -23,7 +23,9 @@ pool.connect((err, client, release) => {
 });
 
 
-app.use("/auth",authRouter);
+app.use("/api/auth",authRouter);
+
+
 app.get("/", (req, res) => {
   res.send("srver is running...");
 });
