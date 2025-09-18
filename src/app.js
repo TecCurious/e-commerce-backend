@@ -4,13 +4,14 @@ import authRouter from "./routes/authRoutes.js"
 
 
 const app = express();
-dotenv.config();
+dotenv.config();//load
 
+
+// middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 const PORT = process.env.PORT;
-
 
 
 app.use("/api/auth",authRouter);
