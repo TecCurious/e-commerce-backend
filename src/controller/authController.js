@@ -26,7 +26,7 @@ export const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
 
-        // inser new user
+        // insert new user
         const newUser = await pool.query(
             "insert into users (username,email,password)values($1,$2,$3) returning *", [username, email, hashedPassword]
         );
@@ -42,6 +42,7 @@ export const register = async (req, res) => {
             token,
         });
     } catch (error) {
+        console.log("error:",error);
         if (error instanceof ZodError) {
             return res.status(400).json({
                 message: "validation failed",
