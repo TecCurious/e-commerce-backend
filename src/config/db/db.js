@@ -17,6 +17,17 @@ const pool = new Pool({
 
 
 
+const connectDB =() =>{
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('❌ Database connection failed:', err.stack);
+  } else {
+    console.log('✅ Database connected successfully!');
+    release(); // release the client back to the pool
+  }
+});
+}
 
-export default pool 
+export  {pool, connectDB};
+// export default pool;
 
