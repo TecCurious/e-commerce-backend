@@ -1,16 +1,17 @@
 import { success, ZodError } from "zod";
 import { UserCreationValidation } from "../validation/zodValidaion.js";
-import {pool} from "../config/db/db.js"
-
+import { pool } from "../config/db/db.js";
+import bcrypt from "bcrypt";
 
 // User Registration API
-export const registerUser = async(req, res) => {
+export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     // validation using Zod
     const parsedValue = UserCreationValidation.parse({
-      username,
+      firstName,
+      lastName,
       email,
       password,
     });
@@ -20,29 +21,51 @@ export const registerUser = async(req, res) => {
     //create user -> store user detils in db
     const client = await pool.connect();
     try {
+      //step 1-> verify user exist or not
+      const result = await client.query(
+        "select * from users where email = $1",
+        [parsedValue.email]
+      );
 
-      //verify user exist or not using email or username
-      const user = await client.query("select * from users where email = $1 OR username = $2",[parsedValue.email, parsedValue.username]);
-
-      if(user.rows.length != 0){
-        res.status(409).json({success:false, message:"user already exixt!, plz login"});
+      if (result.rows.length != 0) {
+        return res
+          .status(409)
+          .json({ success: false, message: "user exist, plx login" });
       }
 
+      //2 craete user
+      //-> a. hash passowr
+      console.log("salt roudn", 10);
+      const hashPassword = await bcrypt.hash(parsedValue.password, 10);
+      console.log("password", parsedValue.password);
+      console.log("hasspasword", hashPassword);
 
+      //-> store user in db
+      const createdUserResult = await client.query(
+        "insert into users (first_name, last_name, email, password) values ($1, $2, $3, $4) returning id",
+        [firstName, lastName, email, hashPassword]
+      );
 
-      console.log("user commig form db", user.rows);
-      
-    } catch (error) {
-      console.log("db erro while",error)
+      //console.log("created user", createdUserResult);
+
+      //geting creatred user id
+      const createdUser = createdUserResult.rows[0];
+
+      //rturn the response with created user information except password
+      res.status(201).json({
+        success: true,
+        message: "user created succesfully!",
+        user: {
+          id: createdUser.id,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        },
+      });
+    } finally {
+      // 7. Always release the client back to the pool
+      client.release();
     }
-    
-
-
-
-
-    // continue with user creation logic here...
-    return res.status(201).json({ success: true, message: "User created successfully!" });
-
   } catch (error) {
     console.log("error while creation user", error);
 

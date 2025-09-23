@@ -1,10 +1,13 @@
-import express from "express";
-import dotenv from "dotenv";
+
+// import dotenv from "dotenv";
+// dotenv.config();
+import "dotenv/config";// user this aproch to laod env on entire application 
+import express from "express"
 import authRouter from "./routes/authRoutes.js"
 import { connectDB } from "./config/db/db.js";
 
 const app = express();
-dotenv.config();
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
