@@ -1,7 +1,11 @@
 import * as z from "zod";
 
 export const UserRegisterValidation = z.object({
-    username: z
+    firstName: z
+        .string("not a string")
+        .min(4, "username min 2 length")
+        .max(12, " username max 12 length"),
+        lastName: z
         .string("not a string")
         .min(4, "username min 2 length")
         .max(12, " username max 12 length"),
@@ -13,7 +17,7 @@ export const UserRegisterValidation = z.object({
 });
 
 export const UserLoginValidation = z.object({
-    username: z
+    email: z
     .string({required_error:"invalid username"}),
     password: z
     .string({required_error:"invalid password"}),

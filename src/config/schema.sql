@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
@@ -20,11 +20,11 @@ INSERT INTO users (
     username, first_name, last_name, email, password, phone, profile, last_login, isVerified, isDeleted
 ) VALUES
     (
-        'john_doe', 'John', 'Doe', 'john.doe@example.com', 'hashed_password_123',
+        'yanshika', 'nigam', 'john.doe@example.com', 'hashed_password_123',
         '9876543210', 'Software Developer', NOW(), TRUE, FALSE
     ),
     (
-        'jane_smith', 'Jane', 'Smith', 'jane.smith@example.com', 'hashed_password_456',
+         'Jane', 'Smith', 'jane.smith@example.com', 'hashed_password_456',
         '9123456780', 'Data Analyst', NOW(), FALSE, FALSE
     );
 
