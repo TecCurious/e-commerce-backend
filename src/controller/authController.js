@@ -1,13 +1,16 @@
 import { success, ZodError } from "zod";
-import { UserCreationValidation } from "../validation/zodValidaion.js";
+import {
+  UserCreationValidation,
+  loginUserValidation,
+} from "../validation/zodValidaion.js";
 import { pool } from "../config/db/db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // User Registration API
 export const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-
     // validation using Zod
     const parsedValue = UserCreationValidation.parse({
       firstName,
@@ -83,3 +86,68 @@ export const registerUser = async (req, res) => {
     });
   }
 };
+
+export const loginUser = async (req, res) => {
+  try {
+    console.log("req body", req.body);
+    const { email, password } = req.body;
+
+    // validate input
+    const parsedData = await loginUserValidation.parse({ email, password });
+
+    const client = await pool.connect();
+    try {
+      // step 1: check if user exists
+      const result = await client.query(
+        "SELECT * FROM users WHERE email = $1",
+        [email]
+      );
+
+      if (result.rows.length !== 1) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found!" });
+      }
+
+      const user = result.rows[0];
+      const hashPassword = user.password;
+
+      // step 2: compare password
+      const isPasswordValid = await bcrypt.compare(password, hashPassword);
+      if (!isPasswordValid) {
+        return res
+          .status(403)
+          .json({ success: false, message: "Invalid credentials!" });
+      }
+
+      // step 3: create jwt token
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || "15m" }
+      );
+
+      // step 4: return response
+      return res.status(200).json({
+        success: true,
+        message: "Login successful!",
+        token,
+      });
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.error("Error while login user", error);
+
+    if (error instanceof ZodError) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Validation failed!" });
+    }
+
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
