@@ -39,7 +39,7 @@ export const registerUser = async (req, res) => {
             const hashedPassword = await bcrypt.hash(parseValue.password, saltRounds);
 
             // 6 user ko db me insert krna using hash password
-            const createUser = await client.query("insert into users(firstname,lastname,email,password)values($1,$2,$3,$4)", [parseValue.firstName, parseValue.lastName, parseValue.email, hashedPassword]);
+            const createUser = await client.query("insert into users(firstName,lastName,email,password)values($1,$2,$3,$4)", [parseValue.firstName, parseValue.lastName, parseValue.email, hashedPassword]);
 
             console.log("created user:", createUser);
             const createUserResult = createUser.rows[0];
