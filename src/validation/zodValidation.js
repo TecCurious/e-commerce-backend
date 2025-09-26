@@ -5,7 +5,7 @@ export const UserRegisterValidation = z.object({
         .string("not a string")
         .min(4, "username min 2 length")
         .max(12, " username max 12 length"),
-        lastName: z
+    lastName: z
         .string("not a string")
         .min(4, "username min 2 length")
         .max(12, " username max 12 length"),

@@ -17,7 +17,7 @@ CREATE TABLE users (
 //demo users inseted into users TABLE
 
 INSERT INTO users (
-    username, first_name, last_name, email, password, phone, profile, last_login, isVerified, isDeleted
+    first_name, last_name, email, password, phone, profile, last_login, isVerified, isDeleted
 ) VALUES
     (
         'yanshika', 'nigam', 'john.doe@example.com', 'hashed_password_123',

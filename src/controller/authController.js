@@ -88,22 +88,22 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
+        console.log("req body",req.body)
         // 1 client se username or password lena
         const { email, password } = req.body;
+            
+        //  2 validation input
+        const parseData=await UserLoginValidation.parse({
+            email,password
+        });
 
-        // 2 agar username or password ki value empty h to error
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "email or password is required",
-            });
-        }
         // 3 database connection open krna
         const client = await pool.connect();
+        
         try {
-            //4 find user db by using username
+            //4 find user db by using email
             const user = await client.query("select * from users where email=$1", [email]);
-            if (user.rows.length === 0) {
+            if (user.rows.length !== 1) {
                 //5 agar user nhi mila 
                 return res.status(404).json({
                     success: false,
