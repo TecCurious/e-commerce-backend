@@ -7,8 +7,10 @@ import { ConnectDB } from "./src/config/db.js";
 const app=express();
 dotenv.config();
 
+// middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
 
 const PORT=process.env.PORT;
 

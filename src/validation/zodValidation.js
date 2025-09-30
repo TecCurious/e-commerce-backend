@@ -18,7 +18,7 @@ export const UserRegisterValidation = z.object({
 
 export const UserLoginValidation = z.object({
     email: z
-    .string({required_error:"invalid username"}),
+    .string({required_error:"invalid email"}),
     password: z
     .string({required_error:"invalid password"}),
     
